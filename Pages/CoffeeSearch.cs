@@ -22,18 +22,12 @@ public class CoffeeSearch(IPage page) : PageTest
 
     public async Task CheckStatusIs200()
     {
-        try
+        var response = await _page.RunAndWaitForResponseAsync(async () =>
         {
-            var response = await _page.RunAndWaitForResponseAsync(async () =>
-            {
-                await CoffeeButton.ClickAsync();
-            }, x => x.Url.Contains("/kava") && x.Status == 200);
+            await CoffeeButton.ClickAsync();
+        }, x => x.Url.Contains("/kava"));
+        Assertions.Equals(response.Status, 200);
 
-        }
-        catch (Exception)
-        {
-            throw new Exception("status is not correct.");
-        }
     }
 
 }
