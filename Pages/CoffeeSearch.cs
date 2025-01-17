@@ -6,30 +6,28 @@ public class CoffeeSearch
 {
     private IPage _page;
     private readonly ILocator _coffeeButton;
-    private readonly ILocator _searchField;
-    private readonly ILocator _completeResults;
-    private readonly ILocator _filterCoffeeTab;
+    private readonly ILocator _filterTab;
     public CoffeeSearch(IPage page)
     {
         _page = page;
         _coffeeButton = _page.Locator("#navbar").GetByRole(AriaRole.Link, new() { Name = "Káva" });
-        _searchField = _page.Locator("#front_search_inp_lg");
-        _completeResults = _page.Locator("#search_complete_results");
-        _filterCoffeeTab = _page.Locator("#filterTab");
+        _filterTab = _page.Locator("#filterTab");
 
     }
 
     public async Task ClickCoffee() => await _coffeeButton.ClickAsync();
 
-    public async Task LookForSomething(String something)
+    public async Task<bool> DoesTabContainText(string expectedText)
     {
-        await _searchField.PressSequentiallyAsync(something);
+        try
+        {
+            var actualText = await _filterTab.InnerTextAsync();
+            return actualText.Contains(expectedText);
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 
-    public async Task<bool> VerifyCoffeeIsClicked()
-    {
-        var actualText = await _filterCoffeeTab.TextContentAsync();
-        return string.Equals(actualText, "Káva");
-
-    }
 }

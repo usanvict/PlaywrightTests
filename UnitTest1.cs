@@ -34,7 +34,7 @@ public class Tests : PageTest
     {
         CoffeeSearch coffeeSearchPage = new CoffeeSearch(Page);
         await coffeeSearchPage.ClickCoffee();
-        await coffeeSearchPage.VerifyCoffeeIsClicked();
+        await coffeeSearchPage.DoesTabContainText("Káva");
     }
 
     [Test]
