@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
+using PlaywrightTests.Pages;
 
 namespace PlaywrightTests;
 
@@ -31,10 +32,9 @@ public class Tests : PageTest
     [Test]
     public async Task HasCoffee()
     {
-        var coffeeButton = Page.Locator("#navbar").GetByRole(AriaRole.Link, new() { Name = "Káva" });
-        await Expect(coffeeButton).ToBeVisibleAsync();
-        await coffeeButton.ClickAsync();
-        await Expect(Page.Locator("#filterTab")).ToHaveTextAsync("Káva");
+        CoffeeSearch coffeeSearchPage = new CoffeeSearch(Page);
+        await coffeeSearchPage.ClickCoffee();
+        await coffeeSearchPage.VerifyCoffeeIsClicked();
     }
 
     [Test]
