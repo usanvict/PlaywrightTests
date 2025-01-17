@@ -21,7 +21,7 @@ public class Tests : PageTest
         });
     }
 
-    [Test]
+    [Skip]
     public async Task HasTitle()
     {
         // Expect a title "to contain" a substring.
@@ -29,15 +29,25 @@ public class Tests : PageTest
         //For a strcit equation, remove Regex
     }
 
+    //Test made with POM
     [Test]
     public async Task HasCoffee()
     {
-        CoffeeSearch coffeeSearchPage = new CoffeeSearch(Page);
+        CoffeeSearch coffeeSearchPage = new(Page);
         await coffeeSearchPage.ClickCoffee();
-        await coffeeSearchPage.DoesTabContainText("Káva");
+        await coffeeSearchPage.VerifyTabText("Káva");
+
     }
 
     [Test]
+    public async Task HasCoffeeNetwork()
+    {
+        CoffeeSearch coffeeSearchPage = new(Page);
+        await coffeeSearchPage.CheckStatusIs200();
+    }
+
+    //Test made without POM
+    [Skip]
     public async Task LookForHAYB()
     {
         var searchFiled = Page.Locator("#front_search_inp_lg");

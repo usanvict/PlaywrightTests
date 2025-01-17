@@ -1,32 +1,38 @@
 using Microsoft.Playwright;
+using Microsoft.Playwright.NUnit;
 
 namespace PlaywrightTests.Pages;
 
-public class CoffeeSearch
+public class CoffeeSearch(IPage page) : PageTest
 {
-    private IPage _page;
-    private readonly ILocator _coffeeButton;
-    private readonly ILocator _filterTab;
-    public CoffeeSearch(IPage page)
-    {
-        _page = page;
-        _coffeeButton = _page.Locator("#navbar").GetByRole(AriaRole.Link, new() { Name = "Káva" });
-        _filterTab = _page.Locator("#filterTab");
+    private readonly IPage _page = page;
+    private ILocator CoffeeButton => _page.Locator("#navbar").GetByRole(AriaRole.Link, new() { Name = "Káva" });
+    public ILocator FilterTab => _page.Locator("#filterTab");
 
+    public async Task ClickCoffee()
+    {
+        await CoffeeButton.ClickAsync();
+        await _page.WaitForURLAsync("**/kava");
     }
 
-    public async Task ClickCoffee() => await _coffeeButton.ClickAsync();
+    public async Task VerifyTabText(string expectedText)
+    {
+        await Expect(FilterTab).ToHaveTextAsync(expectedText);
+    }
 
-    public async Task<bool> DoesTabContainText(string expectedText)
+    public async Task CheckStatusIs200()
     {
         try
         {
-            var actualText = await _filterTab.InnerTextAsync();
-            return actualText.Contains(expectedText);
+            var response = await _page.RunAndWaitForResponseAsync(async () =>
+            {
+                await CoffeeButton.ClickAsync();
+            }, x => x.Url.Contains("/kava") && x.Status == 200);
+
         }
         catch (Exception)
         {
-            return false;
+            throw new Exception("status is not correct.");
         }
     }
 
