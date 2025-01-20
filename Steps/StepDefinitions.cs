@@ -8,7 +8,14 @@ using PlaywrightTests.Pages;
 [Binding]
 public class KofioTestSteps
 {
+    private readonly ScenarioContext _scenarioContext;
     private IPage _page;
+
+    public KofioTestSteps(ScenarioContext scenarioContext)
+    {
+        _scenarioContext = scenarioContext;
+    }
+
 
     [Given(@"I am on the main page")]
     public async Task GoToKofioMainPage()
