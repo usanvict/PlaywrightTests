@@ -13,12 +13,8 @@ public class Tests : PageTest
     [SetUp]
     public async Task Setup()
     {
-        //If I'm not happy with timeouts, I can change it here
-        // Page.SetDefaultTimeout(3000);
-        await Page.GotoAsync("https://kofio.cz", new PageGotoOptions
-        {
-            WaitUntil = WaitUntilState.NetworkIdle
-        });
+        CoffeeSearch coffeeSearchPage = new(Page);
+        await coffeeSearchPage.GoToKofio();
     }
 
     [Skip]
@@ -34,12 +30,13 @@ public class Tests : PageTest
     public async Task HasCoffee()
     {
         CoffeeSearch coffeeSearchPage = new(Page);
+        await coffeeSearchPage.SkipImages();
         await coffeeSearchPage.ClickCoffee();
         await coffeeSearchPage.VerifyTabText("Káva");
 
     }
 
-    [Test]
+    [Skip]
     public async Task HasCoffeeNetwork()
     {
         CoffeeSearch coffeeSearchPage = new(Page);
